@@ -6,9 +6,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 3. Run npm serve
 
 ## Screenshots
-https://drive.google.com/file/d/1k1cfK6z1deSGs131LQqGA-IioaGJJSlD/view?usp=sharing
-
-https://drive.google.com/file/d/14kP42JUifIjJ3iA3NpgKMFYm2QSKerpX/view?usp=sharing
+![Trading](https://i.ibb.co/J3MT1Vy/Screen-Shot-2019-08-16-at-3-23-54-AM.png)
+![Dashboard](https://i.ibb.co/vQWPPTg/Screen-Shot-2019-08-16-at-3-24-06-AM.png)
 
 ## Available Scripts
 

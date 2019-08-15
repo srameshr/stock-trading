@@ -29,12 +29,12 @@ class Trade extends Component {
 		const price = this.state.price || data && data[CLOSING_PRICE];
 		const { date } = this.props;
 		if (
-				negativeBalance ||
-				!(parseInt(quantity, 10)) ||
-				!(parseFloat(price, 10)) ||
-				!(parseFloat(price, 10) > 0) ||
-				!(parseInt(quantity, 10) > 0)
-			) {
+			negativeBalance ||
+			!(parseInt(quantity, 10)) ||
+			!(parseFloat(price, 10)) ||
+			!(parseFloat(price, 10) > 0) ||
+			!(parseInt(quantity, 10) > 0)
+		) {
 			message.error('Please enter positive, decimal numbers.');
 			return false;
 		}
@@ -76,46 +76,46 @@ class Trade extends Component {
 						format={'YYYY-MM-DD'}
 					/>
 				</Form.Item>
-				{ data ? (
-						<React.Fragment>
-							<Form.Item
-								validateStatus={negativeBalance ? 'error' : ''}
-								help={negativeBalance ? 'Please reduce price ' : ''}
+				{data ? (
+					<React.Fragment>
+						<Form.Item
+							validateStatus={negativeBalance ? 'error' : ''}
+							help={negativeBalance ? 'Please reduce price ' : ''}
+						>
+							<Input
+								suffix={<Icon type="dollar" />}
+								placeholder="Price"
+								type="number"
+								name="price"
+								// max={parseFloat(data && data[CLOSING_PRICE], 10)}
+								value={this.state.price || data && data[CLOSING_PRICE]}
+								onChange={this.handleFormChange}
+							/>
+						</Form.Item>
+						<Form.Item
+							validateStatus={negativeBalance ? 'error' : ''}
+							help={negativeBalance ? 'Reduce quantity to match your cash balance' : ''}
+						>
+							<Input
+								suffix={<Icon type="pie-chart" />}
+								placeholder="Quantity"
+								name="quantity"
+								type="number"
+								value={this.state.quantity}
+								onChange={this.handleFormChange}
+							/>
+						</Form.Item>
+						<Form.Item>
+							<Button
+								suffix={<Icon type="pie-chart" />}
+								type="primary" htmlType="submit"
 							>
-								<Input
-									suffix={<Icon type="dollar" />}
-									placeholder="Price"
-									type="number"
-									name="price"
-									// max={parseFloat(data && data[CLOSING_PRICE], 10)}
-									value={this.state.price || data && data[CLOSING_PRICE]}
-									onChange={this.handleFormChange}
-								/>
-							</Form.Item>
-							<Form.Item
-								validateStatus={negativeBalance ? 'error' : ''}
-								help={negativeBalance ? 'Reduce quantity to match your cash balance' : ''}
-							>
-								<Input
-									suffix={<Icon type="pie-chart" />}
-									placeholder="Quantity"
-									name="quantity"
-									type="number"
-									value={this.state.quantity}
-									onChange={this.handleFormChange}
-								/>
-							</Form.Item>
-							<Form.Item>
-								<Button
-									suffix={<Icon type="pie-chart" />}
-									type="primary" htmlType="submit"
-								>
-									Buy
+								Buy
 								</Button>
-							</Form.Item>
-						</React.Fragment>
-		
-					) : null
+						</Form.Item>
+					</React.Fragment>
+
+				) : null
 				}
 			</Form>
 		);

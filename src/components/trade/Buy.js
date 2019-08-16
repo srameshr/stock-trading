@@ -1,21 +1,31 @@
 import React, { Component } from 'react';
-import { Form, DatePicker, Tag, Button, Input, Icon, message } from 'antd';
+import { Form, DatePicker, Tag, Button, Input, Icon, message, Result } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
+import moment from 'moment';
+import Positions from '../../components/positions/Positions';
+import validate from '../../utils/validate';
 import {
   CLOSING_PRICE
 } from '../../constants'
 import {
-  postTrade
+  postTrade,
+  getPositions,
+  getStockSeries
 } from '../../actions'
 
-class Trade extends Component {
+class Buy extends Component {
 
   state = {
     price: '',
     quantity: '',
     negativeBalance: false,
   };
+
+  componentDidMount() {
+    const { symbol } = this.props.match.params;
+    this.props.getPositions({ symbol });
+  }
 
   onDateChange(m, d) {
     this.setState({ price: '', quantity: '' })
@@ -25,40 +35,37 @@ class Trade extends Component {
   onTradeSubmit(e, d) {
     e.preventDefault();
     const { success: { data } } = this.props.stockSeries;
-    const { quantity, negativeBalance } = this.state;
+    const { quantity } = this.state;
     const price = this.state.price || data && data[CLOSING_PRICE];
     const { date } = this.props;
-    if (
-      negativeBalance ||
-      !(parseInt(quantity, 10)) ||
-      !(parseFloat(price, 10)) ||
-      !(parseFloat(price, 10) > 0) ||
-      !(parseInt(quantity, 10) > 0)
-    ) {
-      message.error('Please enter positive, decimal numbers.');
-      return false;
-    }
-    this.props.postTrade({
-      price: parseFloat(price, 10),
-      symbol: this.props.match.params.symbol,
-      position: parseFloat(quantity, 10),
-      date: date.format()
-    });
+    const { symbol } = this.props.match.params;
 
+    try {
+      validate.number({ num: price, name: 'Price', type: { POSITIVE: true, EXISTS: true } });
+      validate.number({ num: quantity, name: 'Quantity', type: { POSITIVE: true, EXISTS: true } })
+      if (!this.checkNegativeBalance()) {
+        this.props.postTrade({
+          type: 'BUY',
+          symbol,
+          price: parseFloat(price, 10),
+          position: parseInt(quantity, 10),
+        });
+      }
+    } catch (e) {
+      message.error(e);
+    }
   }
 
-  checkBalance() {
+  checkNegativeBalance() {
     const { success: { data } } = this.props.stockSeries;
     const price = this.state.price || data && data[CLOSING_PRICE];
-    if (price * this.state.quantity > this.props.balance) {
-      this.setState({ negativeBalance: true });
-    } else {
-      this.setState({ negativeBalance: false });
-    }
+    const negativeBalance = price * this.state.quantity > this.props.balance;
+    this.setState({ negativeBalance });
+    return negativeBalance;
   }
 
   handleFormChange = (e) => {
-    this.setState({ [e.currentTarget.name]: e.currentTarget.value }, () => this.checkBalance());
+    this.setState({ [e.currentTarget.name]: e.currentTarget.value }, () => this.checkNegativeBalance());
   }
 
   renderForm(data) {
@@ -111,7 +118,7 @@ class Trade extends Component {
                 type="primary" htmlType="submit"
               >
                 Buy
-</Button>
+              </Button>
             </Form.Item>
           </React.Fragment>
 
@@ -121,28 +128,65 @@ class Trade extends Component {
     );
   }
 
-  render() {
+  renderBuyFragment() {
     const {
       loading,
       success: { ok, data },
       failure,
     } = this.props.stockSeries;
+    console.log(this.props.stockSeries)
     if (loading) {
       return <Icon type="loading" />
     } else if (ok) {
       return this.renderForm(data);
     } else if (failure && failure.error) {
-      return null;
+      return (
+        <Result
+          status="500"
+          title="500"
+          subTitle="Sorry, something went wrong."
+          extra={(
+            <Button
+              type="primary"
+              onClick={() => {
+                const date = moment().subtract(1, 'days').format('YYYY-MM-DD');
+                const { symbol } = this.props.match.params;
+                this.props.getStockSeries({ symbol, date });
+              }}
+            >
+              Try again
+            </Button>
+          )}
+        />
+      );
     }
     return null;
   }
+
+  render() {
+    const { symbol } = this.props.match.params;
+    return (
+      <React.Fragment>
+        <div className="trade-wrapper">
+          <h2>{symbol}</h2>
+          {this.renderBuyFragment()}
+        </div>
+        <Positions
+          positions={this.props.getPositionsReducers}
+        />
+      </React.Fragment>
+    )
+  }
 }
 
-const mapStateToProps = ({ tradeReducers }) => {
+const mapStateToProps = ({ tradeReducers, positionsReducers }) => {
   const { post: postTradeReducers } = tradeReducers;
-  return { postTradeReducers };
+  const { get: getPositionsReducers } = positionsReducers;
+  return { postTradeReducers, getPositionsReducers };
 };
 
 export default withRouter(connect(mapStateToProps, {
-  postTrade
-})(Trade));
+  postTrade,
+  getPositions,
+  getStockSeries,
+})(Buy));

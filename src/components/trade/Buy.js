@@ -70,6 +70,7 @@ class Buy extends Component {
 
   renderForm(data) {
     const { negativeBalance } = this.state;
+    const { loading } = this.props.postTradeReducers;
     return (
       <Form layout="inline" onSubmit={this.onTradeSubmit.bind(this)}>
         <Form.Item
@@ -114,8 +115,10 @@ class Buy extends Component {
             </Form.Item>
             <Form.Item>
               <Button
-                suffix={<Icon type="pie-chart" />}
-                type="primary" htmlType="submit"
+                type="primary"
+                htmlType="submit"
+                disabled={loading}
+                loading={loading}
               >
                 Buy
               </Button>

@@ -150,7 +150,7 @@ class Sell extends Component {
       <Form onSubmit={this.onTradeSubmit}>
         <Form.Item
           validateStatus={!loading && !data ? 'error' : ''}
-          help={!loading && !data ? 'Please choose a different date' : ''}
+          help={!loading && !data ? 'Please choose a different date or wait for one more day until the trading is available' : ''}
         >
           <DatePicker
             value={this.state.date}
@@ -171,6 +171,7 @@ class Sell extends Component {
       <React.Fragment>
         <div className="trade-wrapper">
           <h2>{symbol}</h2>
+          <h3>Sell the positions you wish to below.</h3>
         </div>
         <Positions
           positions={this.props.getPositionsReducers}

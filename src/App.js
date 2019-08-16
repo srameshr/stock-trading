@@ -28,10 +28,10 @@ class App extends Component {
             </div>
           )}>
             <Switch>
-              <Route exact path="/dashboard" component={() => <DashboardRoute />} />
+              <Route exact path="/" component={() => <DashboardRoute />} />
               <Route path="/trade/:symbol" component={() => <TradeRoute />} />
               <Route path="/trade/:symbol/:type" component={() => <TradeRoute />} />
-              <Route component={() => <DashboardRoute />}/>
+              <Redirect to="/" />
             </Switch>
           </Suspense>
         </Router>

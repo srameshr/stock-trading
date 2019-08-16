@@ -179,7 +179,7 @@ class Sell extends Component {
             title: 'Action',
             dataIndex: 'action',
             value: 'action',
-            render: (text, record) => <a onClick={(e) => this.sellPosition(e, record)}>Sell</a>
+            render: (text, record) => <a disabled={!record.position} onClick={(e) => this.sellPosition(e, record)}>Sell</a>
           }}
         />
         <Modal

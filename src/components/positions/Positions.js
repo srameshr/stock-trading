@@ -66,7 +66,6 @@ class Positions extends Component {
         pagination={false}
         dataSource={positions}
         columns={this.getColumns()}
-        rowKey={uniqid()}
       />
     );
   }

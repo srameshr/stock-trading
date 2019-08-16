@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Divider, Input, Icon, Button, Statistic, Tag } from 'antd';
 import Highlighter from 'react-highlight-words';
-import uniqid from 'uniqid';
 import PortfolioSummary from '../portofolio-summary/PortfolioSummary';
 import formatters from '../../utils/formatters';
 import {
@@ -173,7 +172,6 @@ class Portfolio extends Component {
         pagination={false}
         dataSource={portfolio}
         columns={this.getColumns()}
-        rowKey={uniqid()}
         className="portfolio-table-wrapper"
       />
     );

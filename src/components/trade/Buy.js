@@ -137,7 +137,6 @@ class Buy extends Component {
       success: { ok, data },
       failure,
     } = this.props.stockSeries;
-    console.log(this.props.stockSeries)
     if (loading) {
       return <Icon type="loading" />
     } else if (ok) {

@@ -43,7 +43,7 @@ export const getPortfolio = () => async (dispatch) => {
 			},
 		});
 	} catch (e) {
-		message.error(e)
+		message.error(e.message)
 		dispatch({
 			type: GET_PORTFOLIO_FAILURE,
 			payload: {

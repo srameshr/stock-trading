@@ -5,8 +5,8 @@ import positionsReducers from './positions-reducers';
 import tradeReducers from './trade-reducers';
 
 export default combineReducers({
-    portfolioReducers,
-    stockSeriesReducers,
-    positionsReducers,
-    tradeReducers,
+  portfolioReducers,
+  stockSeriesReducers,
+  positionsReducers,
+  tradeReducers,
 });

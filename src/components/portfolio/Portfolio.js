@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Divider, Input, Icon, Button } from 'antd';
+import { Table, Divider, Input, Icon, Button, Statistic, Tag } from 'antd';
 import Highlighter from 'react-highlight-words';
 import uniqid from 'uniqid';
 import PortfolioSummary from '../portofolio-summary/PortfolioSummary';
@@ -53,7 +53,7 @@ class Portfolio extends Component {
       </div>
     ),
     filterIcon: filtered => (
-      <Icon type="search"  style={{ fontSize: 16, color: filtered ? FILTERED_PORTFOLIO_TEXT_COLOR : undefined }} />
+      <Icon type="search" style={{ fontSize: 16, color: filtered ? FILTERED_PORTFOLIO_TEXT_COLOR : undefined }} />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -76,7 +76,7 @@ class Portfolio extends Component {
   });
 
 
-  getColumns () {
+  getColumns() {
     return [
       {
         title: 'Ticker',
@@ -104,27 +104,58 @@ class Portfolio extends Component {
         dataIndex: 'value',
         key: 'value',
         sorter: (a, b) => a.value - b.value,
-        render: (text) => formatters.currency(text),
+        render: (text, record) => {
+          const { value, investment } = record;
+          const percentage = ((value - investment) / (value + investment / 2)) * 100
+          if (record.value > record.investment) {
+            return (
+              <div className="portfolio-value-wrapper">
+                <span>{formatters.currency(text)}</span>
+                <Tag color="green">
+                  <Icon type="arrow-up" /> {percentage ? percentage.toFixed(2) : 0}%
+                </Tag>
+              </div>
+            );
+          } else if (record.value < record.investment) {
+            return (
+              <div className="portfolio-value-wrapper">
+                <span>{formatters.currency(text)}</span>
+                <Tag color="red">
+                  <Icon type="arrow-down" /> {percentage ? percentage.toFixed(2) : 0}%
+                </Tag>
+              </div>
+            );
+          } else {
+            return (
+              <div className="portfolio-value-wrapper">
+                <span>{formatters.currency(text)}</span>
+                <Tag color="grey">
+                  <Icon type="check" /> {percentage ? percentage.toFixed(2) : 0}%
+                </Tag>
+              </div>
+            );
+          }
+        },
       },
       {
-          title: 'Actions',
-          key: 'action',
-          render: (text, record) => {
-            const disabled = record.positions <= 0;
-            return (
-              <div>
-                <Button type="link" disabled={disabled} className="buy-stocks-action">
-                  <Link to={`/trade/${record.symbol}`} className="disabled">Buy</Link>
-                </Button>
-                <Divider type="vertical" />
-                <Button type="link" disabled={disabled}>
-                  <Link to={`/trade/${record.symbol}`} className="disabled">Sell</Link>
-                </Button>
-              </div>
-            )
-          },
-        }
-    ] 
+        title: 'Actions',
+        key: 'action',
+        render: (text, record) => {
+          const disabled = record.positions <= 0;
+          return (
+            <div>
+              <Button type="link" disabled={disabled} className="buy-stocks-action">
+                <Link to={`/trade/${record.symbol}/buy`}>Buy</Link>
+              </Button>
+              <Divider type="vertical" />
+              <Button type="link" disabled={disabled}>
+                <Link to={`/trade/${record.symbol}/sell`}>Sell</Link>
+              </Button>
+            </div>
+          )
+        },
+      }
+    ]
   }
 
   render() {
@@ -134,17 +165,18 @@ class Portfolio extends Component {
       failure
     } = this.props.porfolio;
     const portfolio = success.ok ? success.data : [];
-      return (
-        <Table
-          title={() => <PortfolioSummary portfolio={portfolio}/>}
-          bordered
-          loading={loading}
-          pagination={false}
-          dataSource={portfolio}
-          columns={this.getColumns()}
-          rowKey={uniqid()}
-        />
-      );
+    return (
+      <Table
+        title={() => <PortfolioSummary portfolio={portfolio} />}
+        bordered
+        loading={loading}
+        pagination={false}
+        dataSource={portfolio}
+        columns={this.getColumns()}
+        rowKey={uniqid()}
+        className="portfolio-table-wrapper"
+      />
+    );
   }
 }
 

@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Route, Redirect, Switch} from "react-router-dom";
-import React, { Component, Suspense, lazy  } from 'react';
+import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
+import React, { Component, Suspense, lazy } from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux'
 import ReduxThunk from 'redux-thunk';
@@ -28,9 +28,10 @@ class App extends Component {
             </div>
           )}>
             <Switch>
-              <Route exact path="/dashboard" component={() => <DashboardRoute/>} />
-              <Route path="/trade/:symbol" component={() => <TradeRoute/>} />
-              <Route component={() => <DashboardRoute />}/>
+              <Route exact path="/dashboard" component={() => <DashboardRoute />} />
+              <Route path="/trade/:symbol" component={() => <TradeRoute />} />
+              <Route path="/trade/:symbol/:type" component={() => <TradeRoute />} />
+              {/* <Route component={() => <DashboardRoute />}/> */}
             </Switch>
           </Suspense>
         </Router>

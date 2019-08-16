@@ -19,6 +19,25 @@
   margin-right: 8px;
 }
 
+.portfolio-table-wrapper .portfolio-value-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.portfolio-table-wrapper .portfolio-value-wrapper span+span {
+  margin: 0.5em 0 0 0;
+}
+
+.portfolio-table-wrapper .ant-statistic-content {
+  font-size: 1.4em;
+} 
+
+/* .portfolio-table-wrapper .ant-statistic-content .ant-statistic-content-value-decimal,
+.portfolio-table-wrapper .ant-statistic-content .ant-statistic-content-suffix {
+  font-size: 11px;
+} */
+
 .trade-wrapper, .portfolio-wrapper {
   display: flex;
   justify-content: center;

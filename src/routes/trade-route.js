@@ -47,12 +47,15 @@ class TradeRoute extends Component {
       return <Icon type="loading" />
     }
     if (data && ok) {
+      const openHigh = data[OPENING_PRICE] > data[CLOSING_PRICE];
+      const closeHigh = data[CLOSING_PRICE] > data[OPENING_PRICE];
+
       return [
-        <Tag color={data[OPENING_PRICE] > data[CLOSING_PRICE] ? 'green' : 'red'} key="1">
-          <Icon type="arrow-up" /> Open: {data[OPENING_PRICE]}
+        <Tag color={!openHigh ? 'red' : 'green'} key="1">
+          <Icon type={!openHigh ? 'arrow-down' : 'arrow-up'} /> Open: {data[OPENING_PRICE]}
         </Tag>,
-        <Tag color={data[CLOSING_PRICE] > data[OPENING_PRICE] ? 'green' : 'red'} key="2">
-          <Icon type="arrow-down" /> Close: {data[CLOSING_PRICE]}
+        <Tag color={!closeHigh ? 'red' : 'green'} key="2">
+          <Icon type={!closeHigh ? 'arrow-down' : 'arrow-up'} /> Close: {data[CLOSING_PRICE]}
         </Tag>,
       ]
     }

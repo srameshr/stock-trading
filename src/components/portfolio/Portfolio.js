@@ -144,7 +144,7 @@ class Portfolio extends Component {
           const disabled = record.positions <= 0;
           return (
             <div>
-              <Button type="link" disabled={disabled} className="buy-stocks-action">
+              <Button type="link" className="buy-stocks-action">
                 <Link to={`/trade/${record.symbol}/buy`}>Buy</Link>
               </Button>
               <Divider type="vertical" />

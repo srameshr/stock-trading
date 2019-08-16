@@ -20,15 +20,15 @@ export const getStockSeries = ({ symbol = '', date = '' }) => async (dispatch) =
     payload: null,
   });
   try {
-    // const { data, status, statusText } = await api.get(SYMBOL_QUERY, {
-    //   params: {
-    //     function: 'TIME_SERIES_DAILY',
-    //     symbol,
-    //     outputsize: 'full',
-    //     apikey: API_KEY,
-    //   }
-    // });
-    const { data } = await axios.get('https://jsonblob.com/api/jsonBlob/62407daf-bf60-11e9-8bb1-598fc1653235')
+    const { data, status, statusText } = await api.get(SYMBOL_QUERY, {
+      params: {
+        function: 'TIME_SERIES_DAILY',
+        symbol,
+        outputsize: 'full',
+        apikey: API_KEY,
+      }
+    });
+    // const { data } = await axios.get('https://jsonblob.com/api/jsonBlob/62407daf-bf60-11e9-8bb1-598fc1653235')
     const stock = (() => {
       const series = data['Time Series (Daily)'][date];
       if (series) {

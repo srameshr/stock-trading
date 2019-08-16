@@ -10,10 +10,16 @@ import { message } from 'antd';
 import uniqid from 'uniqid';;
 
 export const postTrade = ({ type = '', symbol, key = '', position, price, date, currency = 'USD' }) => async (dispatch) => {
+  dispatch({
+    type: POST_TRADE_LOADING,
+    payload: null,
+  });
+
   if (type === 'SELL') {
-    dispatch(sellPositions({ symbol, position, key, price, date, currency }));
+    setTimeout(() => dispatch(sellPositions({ symbol, position, key, price, date, currency })), 1000);
+    
   } else if (type === 'BUY') {
-    dispatch(buyPositions({ symbol, position, price, key, date, currency }));
+    setTimeout(() => dispatch(buyPositions({ symbol, position, price, key, date, currency })), 1000);
   } else {
     const error = 'Invalid trade type';
     message.error(error);
@@ -27,11 +33,6 @@ export const postTrade = ({ type = '', symbol, key = '', position, price, date, 
 };
 
 const buyPositions = ({ symbol, position, price, date, currency = 'USD' }) => async (dispatch) => {
-  dispatch({
-    type: POST_TRADE_LOADING,
-    payload: null,
-  });
-
   try {
     const portfolio = JSON.parse(window.localStorage.getItem('portfolio'));
     const balance = Number(window.localStorage.getItem('balance'));
@@ -61,10 +62,6 @@ const buyPositions = ({ symbol, position, price, date, currency = 'USD' }) => as
 }
 
 const sellPositions = ({ symbol, position, price, key, currency = 'USD' }) => async (dispatch) => {
-  dispatch({
-    type: POST_TRADE_LOADING,
-    payload: null,
-  });
 
   try {
     const portfolio = JSON.parse(window.localStorage.getItem('portfolio'));
@@ -80,7 +77,6 @@ const sellPositions = ({ symbol, position, price, key, currency = 'USD' }) => as
         // }
       }
     });
-    console.log(portfolio)
     window.localStorage.setItem('portfolio', JSON.stringify(portfolio));
     window.localStorage.setItem('balance', balance + price * position)
     dispatch({

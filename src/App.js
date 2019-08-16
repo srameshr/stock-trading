@@ -31,7 +31,7 @@ class App extends Component {
               <Route exact path="/dashboard" component={() => <DashboardRoute />} />
               <Route path="/trade/:symbol" component={() => <TradeRoute />} />
               <Route path="/trade/:symbol/:type" component={() => <TradeRoute />} />
-              {/* <Route component={() => <DashboardRoute />}/> */}
+              <Route component={() => <DashboardRoute />}/>
             </Switch>
           </Suspense>
         </Router>

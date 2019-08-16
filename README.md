@@ -24,7 +24,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
  - [x] Should Update Portfolio value
  - [x] Should reduce Cash Balance
 
-#### Add / Buy Stocks
+#### Sell / Liquidate Stocks
 
  - [x] Should allow the user to select how many positions he wants to liquidate
  - [x] Shouldn’t allow to select date before the purchase date

@@ -106,34 +106,33 @@ class Portfolio extends Component {
         render: (text, record) => {
           const { value, investment } = record;
           const percentage = ((value - investment) / (value + investment / 2)) * 100
-          if (record.value > record.investment) {
-            return (
-              <div className="portfolio-value-wrapper">
-                <span>{formatters.currency(text)}</span>
+          const renderTags = () => {
+            if (record.value > record.investment) {
+              return (
                 <Tag color="green">
                   <Icon type="arrow-up" /> {percentage ? percentage.toFixed(2) : 0}%
                 </Tag>
-              </div>
-            );
-          } else if (record.value < record.investment) {
-            return (
-              <div className="portfolio-value-wrapper">
-                <span>{formatters.currency(text)}</span>
+              );
+            } else if (record.value < record.investment) {
+              return (
                 <Tag color="red">
                   <Icon type="arrow-down" /> {percentage ? percentage.toFixed(2) : 0}%
                 </Tag>
-              </div>
-            );
-          } else {
-            return (
-              <div className="portfolio-value-wrapper">
-                <span>{formatters.currency(text)}</span>
+              )
+            } else {
+              return (
                 <Tag color="grey">
                   <Icon type="check" /> {percentage ? percentage.toFixed(2) : 0}%
                 </Tag>
-              </div>
-            );
-          }
+              );
+            }
+          };
+          return (
+            <div className="portfolio-value-wrapper">
+              <span>{formatters.currency(text)}</span>
+              {renderTags()}
+            </div>
+          );
         },
       },
       {

@@ -49,6 +49,7 @@ class Buy extends Component {
           symbol,
           price: parseFloat(price, 10),
           position: parseInt(quantity, 10),
+          date,
         });
       }
     } catch (e) {

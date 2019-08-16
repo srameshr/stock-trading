@@ -4,7 +4,8 @@ import {
   POST_TRADE_FAILURE,
 } from "../types";
 import {
-  getPositions
+  getPositions,
+  tradeModalHide,
 } from '../../actions';
 import { message } from 'antd';
 import uniqid from 'uniqid';;
@@ -49,6 +50,7 @@ const buyPositions = ({ symbol, position, price, date, currency = 'USD' }) => as
     message.success(`Bought ${position} positions of ${symbol} stock successfully`);
     // getPositions({ symbol })(dispatch);
     dispatch(getPositions({ symbol }))
+    return true;
 
   } catch (e) {
     message.error(e.message);
@@ -88,6 +90,7 @@ const sellPositions = ({ symbol, position, price, key, currency = 'USD' }) => as
     message.success(`Sold ${position} positions of ${symbol} stock successfully`);
     // getPositions({ symbol })(dispatch);
     dispatch(getPositions({ symbol }))
+    dispatch(tradeModalHide());
 
   } catch (e) {
     message.error(e.message);

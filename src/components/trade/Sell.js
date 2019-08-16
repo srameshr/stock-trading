@@ -11,6 +11,8 @@ import {
 import {
   getPositions,
   postTrade,
+  tradeModalShow,
+  tradeModalHide,
 } from '../../actions'
 
 class Sell extends Component {
@@ -19,7 +21,6 @@ class Sell extends Component {
     price: '',
     quantity: '',
     negativePositions: false,
-    sellModalVisible: false,
     position: {},
     date: new Date(),
   };
@@ -36,12 +37,12 @@ class Sell extends Component {
       position,
     }, () => {
       this.props.onDateChange(moment(position.date).format('YYYY-MM-DD'))
-      this.setState({ price: '', sellModalVisible: true })
+      this.setState({ price: ''}, () => this.props.tradeModalShow())
     })
   }
 
   handleCancel = () => {
-    this.setState({ sellModalVisible: false, position: {} });
+    this.setState({ position: {} }, () => this.props.tradeModalHide());
   };
 
   onDateChange = (m, d) => {
@@ -184,7 +185,7 @@ class Sell extends Component {
         />
         <Modal
           title={`Sell ${symbol} positions`}
-          visible={this.state.sellModalVisible}
+          visible={this.props.tradeModalReducers.visible}
           // onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
@@ -200,13 +201,15 @@ class Sell extends Component {
   }
 }
 
-const mapStateToProps = ({ positionsReducers, tradeReducers }) => {
+const mapStateToProps = ({ positionsReducers, tradeReducers, tradeModalReducers }) => {
   const { get: getPositionsReducers } = positionsReducers;
   const { post: postTradeReducers } = tradeReducers;
   // const { get: getStockSeriesReducers } = stockSeriesReducers;
-  return { getPositionsReducers, postTradeReducers };
+  return { getPositionsReducers, postTradeReducers, tradeModalReducers };
 };
 export default withRouter(connect(mapStateToProps, {
   getPositions,
   postTrade,
+  tradeModalShow,
+  tradeModalHide,
 })(Sell));

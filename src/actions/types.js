@@ -18,3 +18,6 @@ export const POST_TRADE_LOADING = 'post_trade_loading';
 export const POST_TRADE_SUCCESS = 'post_trade_success';
 export const POST_TRADE_FAILURE = 'post_trade_failure';
 export const POST_TRADE_RESET = 'post_trade_reset';
+
+export const TRADE_MODAL_SHOW = 'trade_modal_show';
+export const TRADE_MODAL_HIDE = 'trade_modal_hide';

@@ -5,9 +5,57 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 2. Run npm install
 3. Run npm serve
 
+## Passing Tests
+#### Dashboard
+ - [x] Should display his current portfolio value
+ - [x] Should display current cash
+ - [x] Should have search functionality for stocks
+ - [x] Should have tabular display of all open positions
+ - [x] Should allow further actions on open positions
+ - [x] Shouldn’t allow further actions on completely liquidated positions
+
+#### Add / Buy Stocks
+
+ - [x] Should autofill EOD price based on date
+ - [x] Should allow to override the autofill price
+ - [x] Shouldn’t allow to buy more than available cash
+ - [x] Should show current open and closed positions
+ - [x] Should save to open positions when saved
+ - [x] Should Update Portfolio value
+ - [x] Should reduce Cash Balance
+
+#### Add / Buy Stocks
+
+ - [x] Should allow the user to select how many positions he wants to liquidate
+ - [x] Shouldn’t allow to select date before the purchase date
+ - [x] Should autofill the price for the selected date which can be overridden
+ - [x] Should Update Portfolio value
+ - [x] Should add to Cash Balance 
+
+## Routes & Components nested in the below order
+
+ - Home - R
+	 - Portfolio - C
+ - Trade - R
+	 - Symbol - R
+	 - Positions - C
+		 - Buy - RC
+		 - Sell - RC
+
+## Assumptions and factoring
+
+ - Localstorage is used as the database to store and query positions.
+ - Alphavantage API has a low limit and hence is cached globally and handled at utils/api as a configuration.
+ - The starting positions and price  are same as the doc.
+
 ## Screenshots
-![Trading](https://i.ibb.co/CW2r2Z5/Screen-Shot-2019-08-16-at-3-41-29-AM.png)
-![Dashboard](https://i.ibb.co/vQWPPTg/Screen-Shot-2019-08-16-at-3-24-06-AM.png)
+![Trading](https://i.ibb.co/FHQSQCY/Screen-Shot-2019-08-17-at-1-52-55-AM.png)
+
+![Dashboard](https://i.ibb.co/stqnKB3/Screen-Shot-2019-08-17-at-1-52-42-AM.png)
+
+![Sell](https://i.ibb.co/bmXGfg2/Screen-Shot-2019-08-17-at-1-53-23-AM.png)
+
+![Error](https://i.ibb.co/zP03jbf/Screen-Shot-2019-08-17-at-1-53-57-AM.png)
 
 ## Available Scripts
 

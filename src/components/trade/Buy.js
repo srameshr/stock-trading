@@ -36,7 +36,7 @@ class Buy extends Component {
     e.preventDefault();
     const { success: { data } } = this.props.stockSeries;
     const { quantity } = this.state;
-    const price = this.state.price || data && data[CLOSING_PRICE];
+    const price = this.state.price || (data && data[CLOSING_PRICE]);
     const { date } = this.props;
     const { symbol } = this.props.match.params;
 
@@ -58,7 +58,7 @@ class Buy extends Component {
 
   checkNegativeBalance() {
     const { success: { data } } = this.props.stockSeries;
-    const price = this.state.price || data && data[CLOSING_PRICE];
+    const price = this.state.price || (data && data[CLOSING_PRICE]);
     const negativeBalance = price * this.state.quantity > this.props.balance;
     this.setState({ negativeBalance });
     return negativeBalance;
@@ -96,7 +96,7 @@ class Buy extends Component {
                 type="number"
                 name="price"
                 // max={parseFloat(data && data[CLOSING_PRICE], 10)}
-                value={this.state.price || data && data[CLOSING_PRICE]}
+                value={this.state.price || (data && data[CLOSING_PRICE])}
                 onChange={this.handleFormChange}
               />
             </Form.Item>

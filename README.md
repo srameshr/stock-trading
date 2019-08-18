@@ -65,7 +65,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ![Dashboard](https://i.ibb.co/stqnKB3/Screen-Shot-2019-08-17-at-1-52-42-AM.png)
 
-![Sell](https://i.ibb.co/bmXGfg2/Screen-Shot-2019-08-17-at-1-53-23-AM.png)
+![Sell](https://i.ibb.co/Dp4WCxT/Screen-Shot-2019-08-19-at-3-17-10-AM.png)
 
 ![Error](https://i.ibb.co/zP03jbf/Screen-Shot-2019-08-17-at-1-53-57-AM.png)
 

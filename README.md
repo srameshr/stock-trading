@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 1. Clone this project and cd into the project
 2. Run npm install
 3. Run npm serve
-4. 
+
 ## Architecture
 	<Provider>
 	  <Home>

@@ -25,3 +25,5 @@ export const TRADE_MODAL_HIDE = 'trade_modal_hide';
 export const GET_STOCK_LOADING = 'get_stock_loading';
 export const GET_STOCK_SUCCESS = 'get_stock_success';
 export const GET_STOCK_FAILURE = 'get_stock_failure';
+
+export const GET_PORTFOLIO_SUMMARY = 'get_portfolio_summary';

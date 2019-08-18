@@ -11,6 +11,7 @@ import {
 import {
   getPositions,
   tradeModalHide,
+  getPortfolioSummary,
 } from '../../actions';
 import {
   SYMBOL_QUERY,
@@ -91,7 +92,8 @@ const buyPositions = ({ symbol, position, price, date, currency = 'USD' }) => as
     });
     message.success(`Bought ${position} positions of ${symbol} stock successfully`);
     // getPositions({ symbol })(dispatch);
-    dispatch(getPositions({ symbol }))
+    dispatch(getPositions({ symbol }));
+    dispatch(getPortfolioSummary());
     return true;
 
   } catch (e) {
@@ -131,8 +133,9 @@ const sellPositions = ({ symbol, position, price, key, currency = 'USD' }) => as
     });
     message.success(`Sold ${position} positions of ${symbol} stock successfully`);
     // getPositions({ symbol })(dispatch);
-    dispatch(getPositions({ symbol }))
+    dispatch(getPositions({ symbol }));
     dispatch(tradeModalHide());
+    dispatch(getPortfolioSummary());
 
   } catch (e) {
     message.error(e.message);

@@ -1,5 +1,4 @@
 import React from "react";
-// import { getLocaleCode, getlocaleByCode } from "./data";
 import TradeContext from "../../context/Trade.context";
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'

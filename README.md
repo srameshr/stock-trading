@@ -1,10 +1,30 @@
 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## To run
 1. Clone this project and cd into the project
 2. Run npm install
 3. Run npm serve
+4. 
+## Architecture
+	<Provider>
+	  <Home>
+	    <Portfolio />
+	  </Home>
+	  <Trade>
+	    <Trade.Provider value>
+	      <Route mountOnPath>
+		    <Trade.Consumer context>
+			 <HOC context>
+			   <Buy context />
+			   <Sell context />
+			 </HOC>
+		    </Trade.Consumer>
+	      </Route>
+        </Trade.Provider>
+	  </Trade>
+	</Provider>
 
 ## Passing Tests
 #### Dashboard
@@ -33,24 +53,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
  - [x] Should Update Portfolio value
  - [x] Should add to Cash Balance 
 
-## Architecture
-	<Provider>
-	  <Home>
-	    <Portfolio />
-	  </Home>
-	  <Trade>
-	    <Trade.Provider value>
-	      <Route mountOnPath>
-		     <Trade.Consumer context>
-			     <Buy context />
-		      </Trade.Consumer>
-		      <Trade.Consumer>
-			     <Sell context />
-		      </Trade.Consumer>
-	      </Route>
-        </Trade.Provider>
-	  </Trade>
-	</Provider>
    
 ## Assumptions and factoring
 

@@ -28,18 +28,13 @@ class Sell extends Component {
     date: new Date(),
   };
 
-  componentDidMount() {
-    const { symbol } = this.props.match.params;
-    this.props.getPositions({ symbol });
-  }
-
   sellPosition(e, position) {
     e.preventDefault();
     this.setState({
       date: moment(position.date),
       position,
     }, () => {
-      this.context.onDateChange(moment(position.date).format('YYYY-MM-DD'))
+      this.props.onDateChange(moment(position.date), moment(position.date).format('YYYY-MM-DD'))
       this.setState({ price: ''}, () => this.props.tradeModalShow())
     })
   }
@@ -47,12 +42,6 @@ class Sell extends Component {
   handleCancel = () => {
     this.setState({ position: {} }, () => this.props.tradeModalHide());
   };
-
-  onDateChange = (m, d) => {
-    // this.setState({ price: '', quantity: '' })
-    this.context.onDateChange(d);
-    this.setState({ date: moment(d) })
-  }
 
   checkNegativePositions() {
     const negativePositions = this.state.quantity > this.state.position.position;
@@ -73,23 +62,11 @@ class Sell extends Component {
     const {
       success: { data },
     } = this.context.stockSeries;
-    const { symbol } = this.props.match.params;
     const { quantity, position: { key } } = this.state;
     const price = this.state.price || data && data[CLOSING_PRICE];
-    try {
-      validate.number({ num: price, name: 'Price', type: { POSITIVE: true, EXISTS: true } });
-      validate.number({ num: quantity, name: 'Quantity', type: { POSITIVE: true, EXISTS: true } })
-      if (!this.checkNegativePositions()) {
-        this.props.postTrade({
-          type: 'SELL',
-          symbol,
-          price: parseFloat(price, 10),
-          key,
-          position: parseInt(quantity, 10),
-        });
-      }
-    } catch (e) {
-      message.error(e);
+  
+    if (!this.checkNegativePositions()) {
+      this.props.onTradeSubmit({ quantity, type: 'SELL', price, key, position: parseInt(quantity, 10) })
     }
   }
 
@@ -137,6 +114,7 @@ class Sell extends Component {
               Sell
             </Button>
           </Form.Item>
+          {this.props.renderSummaryOnDate()}
         </React.Fragment>
       )
     }
@@ -158,7 +136,7 @@ class Sell extends Component {
         >
           <DatePicker
             value={this.context.date}
-            onChange={this.context.onDateChange}
+            onChange={this.props.onDateChange}
             // defaultValue={moment().subtract(1, 'days')}
             format={'YYYY-MM-DD'}
             disabledDate={this.disabledDate}

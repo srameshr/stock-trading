@@ -6,15 +6,16 @@ import moment from 'moment';
 import Positions from '../../components/positions/Positions';
 import validate from '../../utils/validate';
 import {
-  CLOSING_PRICE
+  CLOSING_PRICE,
+  OPENING_PRICE,
+  HIGH_PRICE,
+  LOW_PRICE,
 } from '../../constants'
 import {
   postTrade,
   getPositions,
   getStockSeries
 } from '../../actions'
-
-
 
 import TradeContext from '../../context/Trade.context';
 
@@ -29,36 +30,18 @@ class Buy extends Component {
   };
 
 
-  onDateChange(momentDate, dateInFormatValue) {
-    if (!momentDate && !dateInFormatValue) {
-      return false;
-    }
-    this.setState({ price: '', quantity: '' })
-    this.context.onDateChange(dateInFormatValue);
-  }
-
-  onTradeSubmit(e, d) {
+  onTradeSubmit = (e, d) => {
     e.preventDefault();
-    const { success: { data } } = this.context.stockSeries;
+    const {
+      success: { data },
+    } = this.context.stockSeries;
     const { quantity } = this.state;
     const price = this.state.price || (data && data[CLOSING_PRICE]);
     const { date } = this.props;
-    const { symbol } = this.props.match.params;
-
-    try {
-      validate.number({ num: price, name: 'Price', type: { POSITIVE: true, EXISTS: true } });
-      validate.number({ num: quantity, name: 'Quantity', type: { POSITIVE: true, EXISTS: true } })
-      if (!this.checkNegativeBalance()) {
-        this.props.postTrade({
-          type: 'BUY',
-          symbol,
-          price: parseFloat(price, 10),
-          position: parseInt(quantity, 10),
-          date,
-        });
-      }
-    } catch (e) {
-      message.error(e);
+    if (!this.checkNegativeBalance()) {
+      this.props.onTradeSubmit({
+        quantity, price, date, type: 'BUY'
+      })
     }
   }
 
@@ -74,18 +57,23 @@ class Buy extends Component {
     this.setState({ [e.currentTarget.name]: e.currentTarget.value }, () => this.checkNegativeBalance());
   }
 
+  onDateChange = (m, d) => {
+    this.setState({ price: '', quantity: '' });
+    this.props.onDateChange(m, d)
+  } 
+
   renderForm(data) {
     const { negativeBalance } = this.state;
     const { loading } = this.props.postTradeReducers;
     return (
-      <Form layout="inline" onSubmit={this.onTradeSubmit.bind(this)}>
+      <Form layout="inline" onSubmit={this.onTradeSubmit}>
         <Form.Item
           validateStatus={!data ? 'error' : ''}
           help={!data ? 'Choose a different date and which is lesser than last trade date' : ''}
         >
           <DatePicker
             value={this.context.date || null}
-            onChange={this.onDateChange.bind(this)}
+            onChange={this.onDateChange}
             // defaultValue={moment().subtract(1, 'days')}
             format={'YYYY-MM-DD'}
           />
@@ -133,6 +121,7 @@ class Buy extends Component {
 
         ) : null
         }
+        {this.props.renderSummaryOnDate()}
       </Form>
     );
   }

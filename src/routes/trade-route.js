@@ -9,12 +9,17 @@ import Sell from '../components/trade/Sell';
 import formatters from '../utils/formatters';
 import {
   getStock,
+  getPortfolioSummary,
 } from '../actions';
 import {
   GET_STOCK,
 } from '../constants';
 import moment from 'moment';
 import Trade from '../components/trade/Trade';
+
+import withTradeDefaults from '../hoc/with-trade-defaults';
+const BuyWithTradeDefaults = withTradeDefaults(Buy);
+const SellWithTradeDefaults = withTradeDefaults(Sell);
 
 class TradeRoute extends Component {
 
@@ -25,6 +30,7 @@ class TradeRoute extends Component {
   componentDidMount() {
     const { symbol } = this.props.match.params;
     this.props.getStock({ symbol })
+    this.props.getPortfolioSummary();
   }
 
   renderTodaysStockSummary = () => {
@@ -77,22 +83,26 @@ class TradeRoute extends Component {
 
   render() {
     const { symbol } = this.props.match.params;
+    const {
+      success: { data: portfolioData }
+    } = this.props.getPortfolioSummayReducer;
+    console.log(this.props)
     return (
       <React.Fragment>
         <PageHeader
           title={symbol}
           subTitle="Today"
           tags={this.renderTodaysStockSummary()}
-          extra={<h3>Cash balance:{formatters.currency(window.localStorage.getItem('balance'))}</h3>}
+          extra={<h3>Cash balance:{formatters.currency(portfolioData.balance)}</h3>}
         />
         <Trade>
           <Route
             path="/trade/:symbol/buy"
-            component={() => <Buy/>}
+            component={() => <BuyWithTradeDefaults {...this.props} />}
           />
           <Route
             path="/trade/:symbol/sell"
-            render={() =>  <Sell/>}
+            render={() =>  <SellWithTradeDefaults {...this.props} />}
           /> 
         </Trade>
       </React.Fragment>
@@ -100,11 +110,13 @@ class TradeRoute extends Component {
   }
 }
 
-const mapStateToProps = ({ stockReducers }) => {
+const mapStateToProps = ({ stockReducers, portfolioSummayReducers }) => {
   const { get: getStockReducers } = stockReducers;
-  return { getStockReducers };
+  const { get: getPortfolioSummayReducer } = portfolioSummayReducers;
+  return { getStockReducers, getPortfolioSummayReducer };
 };
 
 export default withRouter(connect(mapStateToProps, {
+  getPortfolioSummary,
   getStock,
 })(TradeRoute));

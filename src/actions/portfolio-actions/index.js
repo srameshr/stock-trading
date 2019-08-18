@@ -4,6 +4,7 @@ import {
   GET_PORTFOLIO_LOADING,
   GET_PORTFOLIO_SUCCESS,
   GET_PORTFOLIO_FAILURE,
+  GET_PORTFOLIO_SUMMARY,
 } from "../types";
 import {
   SYMBOL_QUERY,
@@ -12,6 +13,15 @@ import {
 } from '../../constants';
 import validate from '../../utils/validate'
 import { message } from 'antd';
+
+export const getPortfolioSummary = () => {
+  return {
+    type: GET_PORTFOLIO_SUMMARY,
+    payload: {
+      balance: window.localStorage.getItem('balance'),
+    }
+  }
+} 
 
 export const getPortfolio = () => async (dispatch) => {
   dispatch({

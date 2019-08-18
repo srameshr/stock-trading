@@ -14,8 +14,11 @@ import {
   tradeModalShow,
   tradeModalHide,
 } from '../../actions'
+import TradeContext from '../../context/Trade.context';
 
 class Sell extends Component {
+
+  static contextType = TradeContext;
 
   state = {
     price: '',
@@ -36,7 +39,7 @@ class Sell extends Component {
       date: moment(position.date),
       position,
     }, () => {
-      this.props.onDateChange(moment(position.date).format('YYYY-MM-DD'))
+      this.context.onDateChange(moment(position.date).format('YYYY-MM-DD'))
       this.setState({ price: ''}, () => this.props.tradeModalShow())
     })
   }
@@ -47,7 +50,7 @@ class Sell extends Component {
 
   onDateChange = (m, d) => {
     // this.setState({ price: '', quantity: '' })
-    this.props.onDateChange(d);
+    this.context.onDateChange(d);
     this.setState({ date: moment(d) })
   }
 
@@ -69,7 +72,7 @@ class Sell extends Component {
     e.preventDefault();
     const {
       success: { data },
-    } = this.props.stockSeries;
+    } = this.context.stockSeries;
     const { symbol } = this.props.match.params;
     const { quantity, position: { key } } = this.state;
     const price = this.state.price || data && data[CLOSING_PRICE];
@@ -146,16 +149,16 @@ class Sell extends Component {
       loading,
       success: { ok, data },
       failure
-    } = this.props.stockSeries;
+    } = this.context.stockSeries;
     return (
       <Form onSubmit={this.onTradeSubmit}>
         <Form.Item
           validateStatus={!loading && !data ? 'error' : ''}
-          help={!loading && !data ? 'Please choose a different date or wait for one more day until the trading is available' : ''}
+          help={!loading && !data ? 'Choose a different date and which is lesser than last trade date' : ''}
         >
           <DatePicker
-            value={this.state.date}
-            onChange={this.onDateChange}
+            value={this.context.date}
+            onChange={this.context.onDateChange}
             // defaultValue={moment().subtract(1, 'days')}
             format={'YYYY-MM-DD'}
             disabledDate={this.disabledDate}
@@ -169,35 +172,41 @@ class Sell extends Component {
   render() {
     const { symbol } = this.props.match.params;
     return (
-      <React.Fragment>
-        <div className="trade-wrapper">
-          <h2>{symbol}</h2>
-          <h3>Sell the positions you wish to below.</h3>
-        </div>
-        <Positions
-          positions={this.props.getPositionsReducers}
-          action={{
-            title: 'Action',
-            dataIndex: 'action',
-            value: 'action',
-            render: (text, record) => <a disabled={!record.position} onClick={(e) => this.sellPosition(e, record)}>Sell</a>
-          }}
-        />
-        <Modal
-          title={`Sell ${symbol} positions`}
-          visible={this.props.tradeModalReducers.visible}
-          // onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          footer={[
-            <Button key="back" onClick={this.handleCancel}>
-              Close
-            </Button>
-          ]}
-        >
-          {this.renderSellFragment()}
-        </Modal>
-      </React.Fragment>
-    )
+      <TradeContext.Consumer>
+      {
+        context => (
+          <React.Fragment>
+            <div className="trade-wrapper">
+              <h2>{symbol}</h2>
+              <h3>Sell the positions you wish to below.</h3>
+            </div>
+            <Positions
+              positions={this.context.getPositionsReducers}
+              action={{
+                title: 'Action',
+                dataIndex: 'action',
+                value: 'action',
+                render: (text, record) => <a disabled={!record.position} onClick={(e) => this.sellPosition(e, record)}>Sell</a>
+              }}
+            />
+            <Modal
+              title={`Sell ${symbol} positions`}
+              visible={this.props.tradeModalReducers.visible}
+              // onOk={this.handleOk}
+              onCancel={this.handleCancel}
+              footer={[
+                <Button key="back" onClick={this.handleCancel}>
+                  Close
+                </Button>
+              ]}
+            >
+              {this.renderSellFragment()}
+            </Modal>
+          </React.Fragment>
+          )
+      }
+      </TradeContext.Consumer>
+    );
   }
 }
 

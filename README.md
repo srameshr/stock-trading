@@ -1,3 +1,4 @@
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## To run
@@ -32,16 +33,25 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
  - [x] Should Update Portfolio value
  - [x] Should add to Cash Balance 
 
-## Routes & Components nested in the below order
-
- - Home - R
-	 - Portfolio - C
- - Trade - R
-	 - Symbol - R
-	 - Positions - C
-		 - Buy - RC
-		 - Sell - RC
-
+## Architecture
+	<Provider>
+	  <Home>
+	    <Portfolio />
+	  </Home>
+	  <Trade>
+	    <Trade.Provider value>
+	      <Route mountOnPath>
+		     <Trade.Consumer context>
+			     <Buy context />
+		      </Trade.Consumer>
+		      <Trade.Consumer>
+			     <Sell context />
+		      </Trade.Consumer>
+	      </Route>
+        </Trade.Provider>
+	  </Trade>
+	</Provider>
+   
 ## Assumptions and factoring
 
  - Localstorage is used as the database to store and query positions.
@@ -49,7 +59,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
  - The starting positions and price  are same as the doc.
 
 ## Screenshots
-![Trading](https://i.ibb.co/FHQSQCY/Screen-Shot-2019-08-17-at-1-52-55-AM.png)
+![Trading](https://i.ibb.co/9TBcvqC/Screen-Shot-2019-08-18-at-11-55-26-PM.png)
 
 ![Dashboard](https://i.ibb.co/stqnKB3/Screen-Shot-2019-08-17-at-1-52-42-AM.png)
 

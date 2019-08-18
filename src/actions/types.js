@@ -21,3 +21,7 @@ export const POST_TRADE_RESET = 'post_trade_reset';
 
 export const TRADE_MODAL_SHOW = 'trade_modal_show';
 export const TRADE_MODAL_HIDE = 'trade_modal_hide';
+
+export const GET_STOCK_LOADING = 'get_stock_loading';
+export const GET_STOCK_SUCCESS = 'get_stock_success';
+export const GET_STOCK_FAILURE = 'get_stock_failure';

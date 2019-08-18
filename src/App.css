@@ -50,3 +50,11 @@
 .buy-stocks-action {
   color: #15b515;
 }
+
+.ant-page-header-heading-tags span {
+  margin-bottom: 5px;
+}
+
+.ant-form-inline .ant-row {
+  text-align: center;
+}

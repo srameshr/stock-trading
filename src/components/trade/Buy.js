@@ -14,7 +14,13 @@ import {
   getStockSeries
 } from '../../actions'
 
+
+
+import TradeContext from '../../context/Trade.context';
+
 class Buy extends Component {
+
+  static contextType = TradeContext;
 
   state = {
     price: '',
@@ -22,19 +28,18 @@ class Buy extends Component {
     negativeBalance: false,
   };
 
-  componentDidMount() {
-    const { symbol } = this.props.match.params;
-    this.props.getPositions({ symbol });
-  }
 
-  onDateChange(m, d) {
+  onDateChange(momentDate, dateInFormatValue) {
+    if (!momentDate && !dateInFormatValue) {
+      return false;
+    }
     this.setState({ price: '', quantity: '' })
-    this.props.onDateChange(d);
+    this.context.onDateChange(dateInFormatValue);
   }
 
   onTradeSubmit(e, d) {
     e.preventDefault();
-    const { success: { data } } = this.props.stockSeries;
+    const { success: { data } } = this.context.stockSeries;
     const { quantity } = this.state;
     const price = this.state.price || (data && data[CLOSING_PRICE]);
     const { date } = this.props;
@@ -58,9 +63,9 @@ class Buy extends Component {
   }
 
   checkNegativeBalance() {
-    const { success: { data } } = this.props.stockSeries;
+    const { success: { data } } = this.context.stockSeries;
     const price = this.state.price || (data && data[CLOSING_PRICE]);
-    const negativeBalance = price * this.state.quantity > this.props.balance;
+    const negativeBalance = price * this.state.quantity > this.context.balance;
     this.setState({ negativeBalance });
     return negativeBalance;
   }
@@ -76,10 +81,10 @@ class Buy extends Component {
       <Form layout="inline" onSubmit={this.onTradeSubmit.bind(this)}>
         <Form.Item
           validateStatus={!data ? 'error' : ''}
-          help={!data ? 'Please choose a different date' : ''}
+          help={!data ? 'Choose a different date and which is lesser than last trade date' : ''}
         >
           <DatePicker
-            value={this.props.date}
+            value={this.context.date || null}
             onChange={this.onDateChange.bind(this)}
             // defaultValue={moment().subtract(1, 'days')}
             format={'YYYY-MM-DD'}
@@ -137,7 +142,7 @@ class Buy extends Component {
       loading,
       success: { ok, data },
       failure,
-    } = this.props.stockSeries;
+    } = this.context.stockSeries;
     if (loading) {
       return <Icon type="loading" />
     } else if (ok) {
@@ -169,15 +174,22 @@ class Buy extends Component {
   render() {
     const { symbol } = this.props.match.params;
     return (
-      <React.Fragment>
-        <div className="trade-wrapper">
-          <h2>{symbol}</h2>
-          {this.renderBuyFragment()}
-        </div>
-        <Positions
-          positions={this.props.getPositionsReducers}
-        />
-      </React.Fragment>
+
+      <TradeContext.Consumer>
+      {
+        context => (
+          <React.Fragment>
+            <div className="trade-wrapper">
+              <h2>{symbol}</h2>
+              {this.renderBuyFragment()}
+            </div>
+            <Positions
+              positions={this.context.getPositionsReducers}
+            />
+          </React.Fragment>
+        )
+      }
+      </TradeContext.Consumer>
     )
   }
 }

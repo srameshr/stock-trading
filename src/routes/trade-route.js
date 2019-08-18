@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
-import { PageHeader, Tag, Icon } from 'antd';
+import { PageHeader, Tag, Icon, Divider } from 'antd';
 import { Route } from "react-router-dom";
 // import Positions from '../components/positions/Positions';
 import Buy from '../components/trade/Buy';
 import Sell from '../components/trade/Sell';
 import formatters from '../utils/formatters';
 import {
-  getPortfolio,
-  getStockSeries,
-  // getPositions,
+  getStock,
 } from '../actions';
 import {
-  OPENING_PRICE,
-  CLOSING_PRICE
+  GET_STOCK,
 } from '../constants';
 import moment from 'moment';
+import Trade from '../components/trade/Trade';
 
 class TradeRoute extends Component {
 
@@ -25,39 +23,54 @@ class TradeRoute extends Component {
   }
 
   componentDidMount() {
-    // const { symbol } = this.props.match.params;
-    // this.props.getPositions({ symbol });
-    this.getStockSeriesForDate();
+    const { symbol } = this.props.match.params;
+    this.props.getStock({ symbol })
   }
 
-  getStockSeriesForDate(date = this.state.date) {
-    this.setState({ date }, () => {
-      const { symbol } = this.props.match.params;
-      this.props.getStockSeries({ symbol, date });
-    })
-  }
-
-  renderOpenAndClosePosition = () => {
+  renderTodaysStockSummary = () => {
     const {
       loading,
       success: { ok, data }
-    } = this.props.getStockSeriesReducers;
+    } = this.props.getStockReducers;
+    const {
+      GET_CLOSE,
+      GET_OPEN,
+      GET_HIGH,
+      GET_LOW,
+      GET_LATEST_TRADING_DAY,
+      GET_PRICE,
+    } = GET_STOCK;
 
     if (loading) {
       return <Icon type="loading" />
     }
     if (data && ok) {
-      const openHigh = data[OPENING_PRICE] > data[CLOSING_PRICE];
-      const closeHigh = data[CLOSING_PRICE] > data[OPENING_PRICE];
+      const openHigh = data[GET_OPEN] > data[GET_CLOSE];
+      const closeHigh = data[GET_CLOSE] > data[GET_OPEN];
 
       return [
         <Tag color={!openHigh ? 'red' : 'green'} key="1">
-          <Icon type={!openHigh ? 'arrow-down' : 'arrow-up'} /> Open: {data[OPENING_PRICE]}
+          <Icon type={!openHigh ? 'arrow-down' : 'arrow-up'} /> Open: {data[GET_OPEN]}
         </Tag>,
         <Tag color={!closeHigh ? 'red' : 'green'} key="2">
-          <Icon type={!closeHigh ? 'arrow-down' : 'arrow-up'} /> Close: {data[CLOSING_PRICE]}
+          <Icon type={!closeHigh ? 'arrow-down' : 'arrow-up'} /> Close: {data[GET_CLOSE]}
         </Tag>,
-      ]
+        <Divider type="vertical" key="a"/>,
+        <Tag color="green" key="3">
+          <Icon type="arrow-up" /> Highest: {data[GET_HIGH]}
+        </Tag>,
+        <Tag color="red" key="4">
+          <Icon type="arrow-down"/> Lowest: {data[GET_LOW]}
+        </Tag>,
+        <Divider type="vertical"  key="b"/>,
+        <Tag color="cyan" key="5">
+          <Icon type="dollar"/> Price: {data[GET_PRICE]}
+        </Tag>,
+        <Divider type="vertical" key="c"/>,
+        <Tag color="blue" key="6">
+          <Icon type="calendar" /> Last trade: {data[GET_LATEST_TRADING_DAY]}
+        </Tag>,
+      ];
     }
     return null;
   }
@@ -68,46 +81,30 @@ class TradeRoute extends Component {
       <React.Fragment>
         <PageHeader
           title={symbol}
-          subTitle="Trade"
-          tags={this.renderOpenAndClosePosition()}
-
+          subTitle="Today"
+          tags={this.renderTodaysStockSummary()}
           extra={<h3>Cash balance:{formatters.currency(window.localStorage.getItem('balance'))}</h3>}
         />
-        <Route
-          path="/trade/:symbol/buy"
-          render={() => (
-            <Buy
-              stockSeries={this.props.getStockSeriesReducers}
-              onDateChange={(d) => this.getStockSeriesForDate(d)}
-              date={moment(this.state.date)}
-              balance={parseFloat(window.localStorage.getItem('balance'), 10)}
-            />
-          )}
-        />
-
-        <Route
-          path="/trade/:symbol/sell"
-          render={() => (
-            <Sell
-              stockSeries={this.props.getStockSeriesReducers}
-              onDateChange={(d) => this.getStockSeriesForDate(d)}
-              date={moment(this.state.date)}
-              balance={parseFloat(window.localStorage.getItem('balance'), 10)}
-            />
-          )}
-        />
+        <Trade>
+          <Route
+            path="/trade/:symbol/buy"
+            component={() => <Buy/>}
+          />
+          <Route
+            path="/trade/:symbol/sell"
+            render={() =>  <Sell/>}
+          /> 
+        </Trade>
       </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = ({ stockSeriesReducers, positionsReducers }) => {
-  const { get: getStockSeriesReducers } = stockSeriesReducers;
-  const { get: getPositionsReducers } = positionsReducers;
-  return { getStockSeriesReducers, getPositionsReducers };
+const mapStateToProps = ({ stockReducers }) => {
+  const { get: getStockReducers } = stockReducers;
+  return { getStockReducers };
 };
 
 export default withRouter(connect(mapStateToProps, {
-  getStockSeries,
-  // getPositions,
+  getStock,
 })(TradeRoute));

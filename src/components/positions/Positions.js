@@ -15,8 +15,9 @@ class Positions extends Component {
         title: 'Date',
         dataIndex: 'date',
         key: 'date',
-        sorter: (a, b) => new Date(a.date) - new Date(b.date),
-        render: (date) => moment(date).format('YYYY-MM-DD')
+        sorter: (a, b) => moment(a.date) - moment(b.date),
+        render: (date) => moment(date).format('YYYY-MM-DD'),
+        // defaultSortOrder: 'descend',
       },
       {
         title: 'Price',

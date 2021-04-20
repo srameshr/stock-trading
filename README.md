@@ -7,6 +7,11 @@
 4. Use of advance react features if and when required.
 5. Upgrade design from mockup within the timeframe
 
+
+#### 
+
+# Solution
+
 ## To run
 1. Clone this project and cd into the project
 2. Run npm install

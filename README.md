@@ -1,6 +1,11 @@
 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+##[Requirement To Product - 16 Hour Challenge](https://app.luminpdf.com/viewer/607ef165f0654c001211b4fe)
+1. Valuating front-end architecture
+2. Coding patterns.
+3. Component hirearchy and organisation
+4. Use of advance react features if and when required.
+5. Upgrade design from mockup within the timeframe
 
 ## To run
 1. Clone this project and cd into the project
